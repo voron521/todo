@@ -25,7 +25,7 @@ export default class NewTaskForm extends Component {
   };
 
   render() {
-    const { label } = this.props;
+    const { label } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
         <input className="new-todo" placeholder="What needs to be done?" onChange={this.onLableChange} value={label} />
