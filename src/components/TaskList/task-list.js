@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+
 import './task-list.css';
 import Task from './Task';
 
@@ -7,19 +8,18 @@ export default class TaskList extends Component {
     super(props);
     this.props = props;
   }
+
   render() {
     const { onDeleted, taskInfo, toogleDone, editingLabelTask } = this.props;
-    const tasksArr = taskInfo.map((task) => {
-      return (
-        <Task
-          Task={task}
-          key={task.key}
-          onDeleted={onDeleted}
-          toogleDone={toogleDone}
-          editingLabelTask={editingLabelTask}
-        />
-      );
-    });
+    const tasksArr = taskInfo.map((task) => (
+      <Task
+        Task={task}
+        key={task.key}
+        onDeleted={onDeleted}
+        toogleDone={toogleDone}
+        editingLabelTask={editingLabelTask}
+      />
+    ));
     return <ul className="todo-list">{tasksArr}</ul>;
   }
 }
@@ -44,6 +44,7 @@ const isFunction = (props, propName, componentName) => {
   if (typeof value !== 'function') {
     return new TypeError(`В компоненте ${componentName}: ${propName} должна быть функцией`);
   }
+  return undefined;
 };
 
 TaskList.propTypes = {
@@ -55,5 +56,6 @@ TaskList.propTypes = {
     if (!Array.isArray(value)) {
       return new TypeError(`В компоненте ${componentName}: ${propName} должен быть массивом объектов`);
     }
+    return undefined;
   },
 };

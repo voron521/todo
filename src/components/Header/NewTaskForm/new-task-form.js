@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './new-task-form.css';
 
 export default class NewTaskForm extends Component {
@@ -7,28 +7,28 @@ export default class NewTaskForm extends Component {
     this.props = props;
     this.state = { label: '' };
   }
+
   onSubmit = (event) => {
+    const { label } = this.state;
+    const { addItem } = this.props;
     event.preventDefault();
-    this.props.addItem(this.state.label);
+    addItem(label);
     this.setState({
       label: '',
     });
   };
+
   onLableChange = (event) => {
     this.setState({
       label: event.target.value,
     });
   };
+
   render() {
+    const { label } = this.props;
     return (
       <form onSubmit={this.onSubmit}>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          autoFocus
-          onChange={this.onLableChange}
-          value={this.state.label}
-        />
+        <input className="new-todo" placeholder="What needs to be done?" onChange={this.onLableChange} value={label} />
       </form>
     );
   }
@@ -43,5 +43,6 @@ NewTaskForm.propTypes = {
     if (typeof value !== 'function') {
       return new TypeError(`В компоненте ${componentName}: ${propName} должна быть функцией`);
     }
+    return undefined;
   },
 };

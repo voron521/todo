@@ -1,3 +1,3 @@
-import Footer from '../Filter/filter';
+import Footer from './filter';
 
 export default Footer;

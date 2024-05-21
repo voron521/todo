@@ -1,3 +1,3 @@
-import NewTaskFrom from '../NewTaskForm/new-task-form';
+import NewTaskFrom from './new-task-form';
 
 export default NewTaskFrom;

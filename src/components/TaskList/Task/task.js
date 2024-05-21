@@ -4,33 +4,39 @@ import './task.css';
 export default class Task extends React.Component {
   constructor(props) {
     super(props);
-    this.props = props;
+    const { Task: task } = props;
+    const { label, className, key } = task;
+
     this.state = {
       done: false,
       editing: false,
-      label: props.Task.label,
-      className: this.props.Task.className,
+      label,
+      className,
     };
-    this.key = this.props.Task.key;
+    this.key = key;
   }
 
   itemDel = () => {
-    this.props.onDeleted(this.key);
+    const { onDeleted } = this.props;
+    onDeleted(this.key);
   };
+
   handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
+    const { className } = this.state;
+    const { toogleDone } = this.props;
     this.setState(
-      () => {
-        return {
-          done: isChecked,
-          className: isChecked ? 'completed' : 'view',
-        };
-      },
-      () => this.props.toogleDone(isChecked, this.key, this.state.className)
+      () => ({
+        done: isChecked,
+        className: isChecked ? 'completed' : 'view',
+      }),
+      () => toogleDone(isChecked, this.key, className)
     );
   };
 
   crossOut = (event) => {
+    const { toogleDone } = this.props;
+
     if (!event.target.className.includes('icon-edit')) {
       this.setState(
         (state) => {
@@ -40,7 +46,12 @@ export default class Task extends React.Component {
             className: newDone ? 'completed' : 'view',
           };
         },
-        () => this.props.toogleDone(this.state.done, this.key, this.state.className)
+
+        () => {
+          const { done } = this.state;
+          const { className } = this.state;
+          toogleDone(done, this.key, className);
+        }
       );
     }
   };
@@ -52,23 +63,32 @@ export default class Task extends React.Component {
   };
 
   onSubmit = (event) => {
+    const { editingLabelTask } = this.props;
+    const { label } = this.state;
     event.preventDefault();
-    this.props.editingLabelTask(this.key, this.state.label);
+    editingLabelTask(this.key, label);
     this.setState((state) => ({
       editing: !state.editing,
     }));
   };
+
   onLableChange = (event) => {
     this.setState({
       label: event.target.value,
     });
   };
 
-  render() {
-    console.log('вот просы', this.props);
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.crossOut(event);
+    }
+  };
 
-    const { className, label, createTime, key } = this.props.Task;
-    const { done, editing } = this.state;
+  render() {
+    const {
+      Task: { className, label, createTime, key },
+    } = this.props;
+    const { done, editing, label: labelSt } = this.state;
     let classNames = className;
 
     if (done) {
@@ -76,19 +96,26 @@ export default class Task extends React.Component {
     }
 
     return (
-      <li key={key} className={classNames} onClick={this.crossOut}>
+      <li
+        key={key}
+        className={classNames}
+        onClick={this.crossOut}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
+        role="button"
+        tabIndex={0}
+        onKeyDown={this.handleKeyPress}
+      >
         <div className="view">
           <input className="toggle" type="checkbox" checked={done} onChange={this.handleCheckboxChange} />
-          <label>
+          <label htmlFor={`checkbox-${key}`}>
             <span className="description">
               {editing ? (
                 <form onSubmit={this.onSubmit}>
                   <input
                     className="labaelChangeInput"
                     placeholder="What needs to be done?"
-                    autoFocus
                     onChange={this.onLableChange}
-                    value={this.state.label}
+                    value={labelSt}
                   />
                 </form>
               ) : (
@@ -97,8 +124,8 @@ export default class Task extends React.Component {
             </span>
             <span className="created">{createTime}</span>
           </label>
-          <button className="icon icon-edit" onClick={this.toggleEditing}></button>
-          <button className="icon icon-destroy" onClick={this.itemDel}></button>
+          <button type="button" className="icon icon-edit" onClick={this.toggleEditing} aria-label="Edit" />
+          <button type="button" className="icon icon-destroy" onClick={this.itemDel} aria-label="Delete" />
         </div>
       </li>
     );
@@ -106,11 +133,10 @@ export default class Task extends React.Component {
 }
 
 Task.defaultProps = {
-  changeViewTask: () => {},
+  Task: {},
   editingLabelTask: () => {},
   onDeleted: () => {},
   toogleDone: () => {},
-  todoCount: 'значения нет',
 };
 
 const isFunction = (props, propName, componentName) => {
@@ -118,6 +144,7 @@ const isFunction = (props, propName, componentName) => {
   if (typeof value !== 'function') {
     return new TypeError(`В компоненте ${componentName}: ${propName} должна быть функцией`);
   }
+  return undefined;
 };
 
 Task.propTypes = {
@@ -126,9 +153,9 @@ Task.propTypes = {
     if (typeof value !== 'object') {
       return new TypeError(`В компоненте ${componentName}: ${propName} должен быть Объектом`);
     }
+    return undefined;
   },
 
-  changeViewTask: isFunction,
   editingLabelTask: isFunction,
   onDeleted: isFunction,
   toogleDone: isFunction,

@@ -15,7 +15,6 @@ export default class Filter extends Component {
       filter: { key },
     } = this.props;
     buttonIsAtive(key);
-    // this.props.buttonIsAtive(key);
   }
 
   render() {
@@ -39,12 +38,12 @@ Filter.defaultProps = {
   filter: { label: 'кнопки не переданы', className: 'selected', key: 0 },
 };
 
-
 const isFunction = (props, propName, componentName) => {
   const value = props[propName];
   if (typeof value !== 'function') {
     return new TypeError(`В компоненте ${componentName}: ${propName} должна быть функцией`);
   }
+  return undefined;
 };
 
 Filter.propTypes = {

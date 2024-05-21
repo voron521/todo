@@ -64,11 +64,4 @@
       "pre-push": "YOUR_COMMAND_HERE"
     }
   }
-  // "lint-staged": {
-  //   "*.{js,jsx,ts,tsx}": [
-  //     "eslint --fix",
-  //     "prettier --write",
-  //     "git add"
-  //   ]
-  // }
 }
