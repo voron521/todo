@@ -49,8 +49,7 @@ export default class Task extends React.Component {
         },
 
         () => {
-          const { done } = this.state;
-          const { className } = this.state;
+          const { done, className } = this.state;
           toogleDone(done, this.key, className);
         }
       );
@@ -58,11 +57,14 @@ export default class Task extends React.Component {
   };
 
   toggleEditing = () => {
-    const { editing } = this.state;
     this.setState(
-      (state) => ({ editing: !state.editing }),
+      (state) => {
+        const newEditingState = !state.editing;
+        return { editing: newEditingState };
+      },
       () => {
-        if (editing) {
+        const { editing } = this.state;
+        if (editing && this.inputRef.current) {
           this.inputRef.current.focus();
         }
       }
