@@ -14,6 +14,7 @@ export default class Task extends React.Component {
       className,
     };
     this.key = key;
+    this.inputRef = React.createRef();
   }
 
   itemDel = () => {
@@ -57,9 +58,15 @@ export default class Task extends React.Component {
   };
 
   toggleEditing = () => {
-    this.setState((state) => ({
-      editing: !state.editing,
-    }));
+    const { editing } = this.state;
+    this.setState(
+      (state) => ({ editing: !state.editing }),
+      () => {
+        if (editing) {
+          this.inputRef.current.focus();
+        }
+      }
+    );
   };
 
   onSubmit = (event) => {
@@ -76,12 +83,6 @@ export default class Task extends React.Component {
     this.setState({
       label: event.target.value,
     });
-  };
-
-  handleKeyPress = (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      this.crossOut(event);
-    }
   };
 
   render() {
@@ -112,6 +113,7 @@ export default class Task extends React.Component {
               {editing ? (
                 <form onSubmit={this.onSubmit}>
                   <input
+                    ref={this.inputRef}
                     className="labaelChangeInput"
                     placeholder="What needs to be done?"
                     onChange={this.onLableChange}
