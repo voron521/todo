@@ -5,16 +5,26 @@ export default class Task extends React.Component {
   constructor(props) {
     super(props);
     const { Task: task } = props;
-    const { label, className, key } = task;
+    const { label, className, key, min, sec } = task;
 
     this.state = {
       done: false,
       editing: false,
       label,
       className,
+      min,
+      sec,
+      timerIdState: null,
     };
     this.key = key;
     this.inputRef = React.createRef();
+  }
+
+  componentWillUnmount() {
+    const { timerIdState } = this.state;
+    if (timerIdState !== null) {
+      clearInterval(timerIdState);
+    }
   }
 
   itemDel = () => {
@@ -35,10 +45,33 @@ export default class Task extends React.Component {
     );
   };
 
+  timerFunc = () => {
+    const { sec, min } = this.state;
+    if (sec > 0) {
+      this.setState((state) => ({
+        sec: state.sec - 1,
+      }));
+    } else if (min > 0) {
+      this.setState((state) => ({
+        min: state.min - 1,
+        sec: 59,
+      }));
+    }
+  };
+
+  startTimer = () => {
+    const { timerIdState } = this.state;
+    if (timerIdState === null) {
+      const timerId = setInterval(this.timerFunc, 1000);
+      this.setState(() => ({
+        timerIdState: timerId,
+      }));
+    }
+  };
+
   crossOut = (event) => {
     const { toogleDone } = this.props;
-
-    if (!event.target.className.includes('icon-edit')) {
+    if (!event.target.className.includes('icon')) {
       this.setState(
         (state) => {
           const newDone = !state.done;
@@ -47,7 +80,6 @@ export default class Task extends React.Component {
             className: newDone ? 'completed' : 'view',
           };
         },
-
         () => {
           const { done, className } = this.state;
           toogleDone(done, this.key, className);
@@ -87,11 +119,21 @@ export default class Task extends React.Component {
     });
   };
 
+  stopTimer() {
+    const { timerIdState } = this.state;
+    if (timerIdState !== null) {
+      clearInterval(timerIdState);
+    }
+    this.setState(() => ({
+      timerIdState: null,
+    }));
+  }
+
   render() {
     const {
       Task: { className, label, createTime, key },
     } = this.props;
-    const { done, editing, label: labelSt } = this.state;
+    const { done, editing, label: labelSt, min, sec } = this.state;
     let classNames = className;
 
     if (done) {
@@ -125,6 +167,16 @@ export default class Task extends React.Component {
               ) : (
                 <span>{label}</span>
               )}
+            </span>
+            <span className="description">
+              <button type="button" className="icon icon-play" onClick={this.startTimer.bind(this)} aria-label="play" />
+              <button
+                type="button"
+                className="icon icon-pause"
+                onClick={this.stopTimer.bind(this)}
+                aria-label="pause"
+              />
+              <span className="time-span">{sec > 9 ? `${min}:${sec}` : `${min}:0${sec}`}</span>
             </span>
             <span className="created">{createTime}</span>
           </label>
