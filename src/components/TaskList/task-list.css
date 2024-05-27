@@ -90,44 +90,8 @@
 	text-decoration: line-through;
 }
 
-.todo-list li .icon {
-	position: absolute;
-	top: 0;
-	bottom: -3px;
-	width: 30px;
-	height: 40px;
-	font-size: 34px;
-	color: #cc9a9a;
-	margin: auto 0 11px;
-	transition: color 0.2s ease-out;
-	cursor: pointer;
-}
 
-.todo-list li .icon:hover {
-	color: #af5b5e;
-}
 
-.todo-list li .icon-destroy {
-	right: 10px;
-}
 
-.todo-list li .icon-destroy:after {
-	content: '×';
-}
 
-.todo-list li .icon-edit {
-	font-size: 19px;
-	right: 45px;
-}
 
-.todo-list li .icon-edit:after {
-	content: '✎';
-}
-
-.todo-list li .edit {
-	display: none;
-}
-
-.todo-list li.editing:last-child {
-	margin-bottom: -1px;
-}

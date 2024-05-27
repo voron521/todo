@@ -64,8 +64,8 @@ export default class TodoApp extends Component {
     }
   };
 
-  addItem = (text) => {
-    const newItem = this.createTodoTask(text);
+  addItem = (text, min, sec) => {
+    const newItem = this.createTodoTask(text, min, sec);
     this.setState(({ taskInfo }) => {
       const newArrForItem = [...taskInfo, newItem];
       return {
@@ -142,7 +142,7 @@ export default class TodoApp extends Component {
     });
   };
 
-  createTodoTask(label) {
+  createTodoTask(label, min, sec) {
     const createTime = 'create 0 seconds ago';
     this.generateId += 1;
     return {
@@ -152,6 +152,8 @@ export default class TodoApp extends Component {
       createTimeForLabel: new Date().getTime(),
       key: this.generateId,
       done: false,
+      min,
+      sec,
     };
   }
 

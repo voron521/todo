@@ -10,7 +10,8 @@ export default class TaskList extends Component {
   }
 
   render() {
-    const { onDeleted, taskInfo, toogleDone, editingLabelTask } = this.props;
+    const { onDeleted, taskInfo, toogleDone, editingLabelTask, min, sec } = this.props;
+
     const tasksArr = taskInfo.map((task) => (
       <Task
         Task={task}
@@ -18,6 +19,8 @@ export default class TaskList extends Component {
         onDeleted={onDeleted}
         toogleDone={toogleDone}
         editingLabelTask={editingLabelTask}
+        min={min}
+        sec={sec}
       />
     ));
     return <ul className="todo-list">{tasksArr}</ul>;
