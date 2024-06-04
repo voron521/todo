@@ -1,7 +1,7 @@
 import './Header.css';
 import NewTaskForm from './NewTaskForm';
 
-function Header({ addItem = () => {} }) {
+function Header({ addItem }) {
   return (
     <header className="header">
       <h1>todos</h1>
